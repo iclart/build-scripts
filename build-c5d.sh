@@ -90,6 +90,11 @@ wget https://ftp.pcre.org/pub/pcre/pcre-${pcre_ver}.tar.gz
 tar -zxvf pcre-${pcre_ver}.tar.gz
 rm -rf pcre-${pcre_ver}.tar.gz
 
+# cache_purge_module
+wget https://github.com/FRiCKLE/ngx_cache_purge/archive/${cache_ver}.tar.gz
+tar -zxvf ${cache_ver}.tar.gz
+rm -rf ${cache_ver}.tar.gz
+
 # nginx
 wget https://athena.ifreetion.com/Sources/nginx/nginx-${ngx_ver}.tar.gz
 tar -zxvf nginx-${ngx_ver}.tar.gz
@@ -146,6 +151,7 @@ patch -p1 < ../patch/nginx_strict-sni.patch
 --add-module=../ngx_devel_kit-${ndk_ver} \
 --add-module=../headers-more-nginx-module \
 --add-module=../lua-nginx-module-${ngx_lua_ver} \
+--add-module=../ngx_cache_purge-${cache_ver} \
 --with-pcre=../pcre-${pcre_ver} \
 --with-zlib=../zlib \
 --with-openssl=../openssl-${openssl_ver} \
@@ -155,3 +161,4 @@ make -j2
 chmod -R 777 *
 openssl version
 ./objs/nginx -v && ./objs/nginx -V
+popd
