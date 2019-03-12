@@ -130,7 +130,7 @@ patch -p1 < ../patch/nginx_strict-sni.patch
 --with-http_ssl_module \
 --with-http_stub_status_module \
 --with-http_sub_module \
---with-http_spdy_module \
+--with-http_v2_module \
 --with-http_xslt_module \
 --with-http_image_filter_module \
 --with-http_degradation_module \
