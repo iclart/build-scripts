@@ -154,7 +154,7 @@ patch -p1 < ../patch/nginx_strict-sni.patch
 --add-module=../headers-more-nginx-module \
 --add-module=../lua-nginx-module-${ngx_lua_ver} \
 --add-module=../ngx_cache_purge-${cache_ver} \
---add-module=../nginx-dav-ext-module-${ngx_lua_ver} \
+--add-module=../nginx-dav-ext-module-${webdav_ext_ver} \
 --with-pcre=../pcre-${pcre_ver} \
 --with-zlib=../zlib \
 --with-openssl=../openssl-${openssl_ver} \
