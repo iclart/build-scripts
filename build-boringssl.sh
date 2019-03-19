@@ -86,17 +86,18 @@ rm -rf ${cache_ver}.tar.gz
 
 # boringssl
 git clone https://boringssl.googlesource.com/boringssl
-cd boringssl
-mkdir build && cd build && make -j$(nproc) ../ && make -j$(nproc) && cd ../
+pushd boringssl
+make -j$(nproc)
 mkdir -p .openssl/lib && cd .openssl && ln -s ../include . && cd ../
-cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib
-cd ../
+cp crypto/libcrypto.a ssl/libssl.a .openssl/lib
+popd
 
 # nginx
 wget https://athena.ifreetion.com/Sources/nginx/nginx-${ngx_ver}.tar.gz
 tar -zxvf nginx-${ngx_ver}.tar.gz
 pushd nginx-${ngx_ver}
-touch ../boringssl/.openssl/include/openssl/ssl.h
+mkdir -p /root/build/boringssl/.openssl/include/openssl
+touch /root/build/boringssl/.openssl/include/openssl/ssl.h
 patch -p1 < ../patch/nginx_strict-sni.patch
 ./configure \
 --prefix=/etc/nginx \
