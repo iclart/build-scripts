@@ -25,7 +25,7 @@ tar -zxvf openssl-${openssl_ver}.tar.gz
 # step2: build
 pushd openssl-${openssl_ver}
 ./config --prefix=/usr/local/openssl
-make && make install
+make -j$(nproc) && make install
 popd
 
 # step3: replace old version
@@ -82,7 +82,7 @@ rm -rf v${ngx_lua_ver}.tar.gz
 wget https://github.com/openresty/luajit2/archive/v${luajit_ver}.tar.gz
 tar -zxvf v${luajit_ver}.tar.gz
 pushd luajit2-${luajit_ver}
-make && make install
+make -j$(nproc) && make install
 popd
 export LUAJIT_LIB=/usr/local/lib
 export LUAJIT_INC=/usr/local/include/luajit-2.1
@@ -160,7 +160,7 @@ patch -p1 < ../patch/nginx_strict-sni.patch
 --with-openssl=../openssl-${openssl_ver} \
 --with-openssl-opt=enable-weak-ssl-ciphers
 
-make
+make -j$(nproc)
 chmod -R 777 *
 openssl version
 ./objs/nginx -v && ./objs/nginx -V

@@ -24,7 +24,7 @@ rm -rf openssl-${openssl_ver}.tar.gz
 # step2: build
 pushd openssl-${openssl_ver}
 ./config --prefix=/usr/local/openssl
-make && make install
+make -j$(nproc) && make install
 popd
 
 # step3: replace old version
@@ -69,7 +69,7 @@ rm -rf v${ngx_lua_ver}.tar.gz
 wget https://github.com/openresty/luajit2/archive/v${luajit_ver}.tar.gz
 tar -zxvf v${luajit_ver}.tar.gz
 pushd luajit2-${luajit_ver}
-make && make install
+make -j$(nproc) && make install
 popd
 export LUAJIT_LIB=/usr/local/lib
 export LUAJIT_INC=/usr/local/include/luajit-2.1
@@ -87,7 +87,7 @@ rm -rf ${cache_ver}.tar.gz
 # boringssl
 git clone https://boringssl.googlesource.com/boringssl
 cd boringssl
-mkdir build && cd build && make ../ && make && cd ../
+mkdir build && cd build && make -j$(nproc) ../ && make -j$(nproc) && cd ../
 mkdir -p .openssl/lib && cd .openssl && ln -s ../include . && cd ../
 cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib
 cd ../
@@ -154,7 +154,7 @@ patch -p1 < ../patch/nginx_strict-sni.patch
 --with-zlib=../zlib \
 --with-openssl=../boringssl
 
-make
+make -j$(nproc)
 chmod -R 777 *
 openssl version
 ./objs/nginx -v && ./objs/nginx -V
