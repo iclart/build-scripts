@@ -4,9 +4,9 @@
 # Preparation
 yum install wget libffi* -y
 yum groupinstall "Development Tools" -y
-yum install centos-release-scl -y
-yum install devtoolset-8 -y
-scl enable devtoolset-8 bash
+# yum install centos-release-scl -y
+# yum install devtoolset-8 -y
+# scl enable devtoolset-8 bash
 
 # Download and install cmake
 mkdir -p /opt/require/build
