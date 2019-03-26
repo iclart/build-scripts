@@ -3,14 +3,14 @@
 . ./versions.sh
 
 # preparation
-mkdir -p /root/build
-cd /root/build
+mkdir -p /opt/build
+cd /opt/build
 yum update -y
 yum groupinstall "Development Tools" -y
 yum install git patch wget pcre pcre-devel zlib zlib-devel libxml2 libxml2-devel libxslt-devel gd gd-devel libatomic_ops-devel -y
 
 # fetch patch
-cd /root/build
+cd /opt/build
 mkdir patch
 pushd patch
 wget https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/openssl-equal-${openssl_ver}_ciphers.patch
