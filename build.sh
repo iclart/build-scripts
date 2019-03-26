@@ -92,6 +92,12 @@ wget https://github.com/FRiCKLE/ngx_cache_purge/archive/${cache_ver}.tar.gz
 tar -zxvf ${cache_ver}.tar.gz
 rm -rf ${cache_ver}.tar.gz
 
+# Clang
+# export CFLAGS="-Wno-c++11-extensions -Wno-error -Wno-deprecated-declarations -Wno-unused-const-variable -Wno-conditional-uninitialized -Wno-mismatched-tags"
+# export COMPILER=clang-${clang_ver}
+# export CXX=clang++-${clang_ver}
+# export CC=clang-${clang_ver}
+
 # nginx
 wget https://athena.ifreetion.com/Sources/nginx/nginx-${ngx_ver}.tar.gz
 tar -zxvf nginx-${ngx_ver}.tar.gz

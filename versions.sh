@@ -8,5 +8,4 @@ openssl_ver=1.1.1b
 cache_ver=2.3
 webdav_ext_ver=3.0.0
 cmake_ver=3.14.0
-llvm_ver=8.0.0
-clang_ver=8.0.0
+clang_ver=5.0.1
