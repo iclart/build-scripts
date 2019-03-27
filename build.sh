@@ -92,6 +92,11 @@ wget https://github.com/FRiCKLE/ngx_cache_purge/archive/${cache_ver}.tar.gz
 tar -zxvf ${cache_ver}.tar.gz
 rm -rf ${cache_ver}.tar.gz
 
+# webdav-ext-module
+wget https://github.com/arut/nginx-dav-ext-module/archive/v${webdav_ext_ver}.tar.gz
+tar -zxvf v${webdav_ext_ver}.tar.gz
+rm -rf v${webdav_ext_ver}.tar.gz
+
 # Clang
 # export CFLAGS="-Wno-c++11-extensions -Wno-error -Wno-deprecated-declarations -Wno-unused-const-variable -Wno-conditional-uninitialized -Wno-mismatched-tags"
 # export COMPILER=clang-${clang_ver}
@@ -155,6 +160,7 @@ patch -p1 < ../patch/nginx_strict-sni.patch
 --add-module=../headers-more-nginx-module \
 --add-module=../lua-nginx-module-${ngx_lua_ver} \
 --add-module=../ngx_cache_purge-${cache_ver} \
+--add-module=../nginx-dav-ext-module-${webdav_ext_ver} \
 --with-pcre=../pcre-${pcre_ver} \
 --with-zlib=../zlib \
 --with-openssl=../openssl-${openssl_ver} \
