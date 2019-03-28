@@ -15,7 +15,7 @@ mkdir patch
 pushd patch
 wget https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/openssl-equal-${openssl_ver}_ciphers.patch
 wget https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/openssl-${openssl_ver}-chacha_draft.patch
-wget https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/nginx_strict-sni.patch
+wget https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/nginx_strict-sni_${ngx_ver}.patch
 popd
 
 # openssl upgrade -step1: fetch source
