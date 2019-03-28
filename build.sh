@@ -43,6 +43,7 @@ rm -rf openssl-${openssl_ver}
 
 # openssl
 tar -zxvf openssl-${openssl_ver}.tar.gz
+rm -rf openssl-${openssl_ver}.tar.gz
 pushd openssl-${openssl_ver}
 patch -p1 < ../patch/openssl-equal-${openssl_ver}_ciphers.patch
 patch -p1 < ../patch/openssl-${openssl_ver}-chacha_draft.patch
@@ -76,6 +77,7 @@ rm -rf v${ngx_lua_ver}.tar.gz
 # luajit2
 wget https://github.com/openresty/luajit2/archive/v${luajit_ver}.tar.gz
 tar -zxvf v${luajit_ver}.tar.gz
+rm -rf v${luajit_ver}.tar.gz
 pushd luajit2-${luajit_ver}
 make -j$(nproc) && make install
 popd
@@ -106,8 +108,9 @@ rm -rf v${webdav_ext_ver}.tar.gz
 # nginx
 wget https://athena.ifreetion.com/Sources/nginx/nginx-${ngx_ver}.tar.gz
 tar -zxvf nginx-${ngx_ver}.tar.gz
+rm -rf nginx-${ngx_ver}.tar.gz
 pushd nginx-${ngx_ver}
-patch -p1 < ../patch/nginx_strict-sni.patch
+patch -p1 < ../patch/nginx_strict-sni_${ngx_ver}.patch
 ./configure \
 --prefix=/etc/nginx \
 --sbin-path=/usr/sbin/nginx \
