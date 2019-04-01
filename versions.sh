@@ -2,7 +2,7 @@
 ngx_ver=1.15.10
 ndk_ver=0.3.1rc1
 ngx_lua_ver=0.10.14
-luajit_ver=2.1-20190302
+luajit_ver=2.1-20190329
 pcre_ver=8.43
 openssl_ver=1.1.1b
 cache_ver=2.3
