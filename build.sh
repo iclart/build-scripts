@@ -110,7 +110,7 @@ wget https://athena.ifreetion.com/Sources/nginx/nginx-${ngx_ver}.tar.gz
 tar -zxvf nginx-${ngx_ver}.tar.gz
 rm -rf nginx-${ngx_ver}.tar.gz
 pushd nginx-${ngx_ver}
-patch -p1 < ../patch/nginx_strict-sni_${ngx_ver}.patch
+patch -p1 < ../patch/nginx_strict-sni_${nssp_ver}.patch
 ./configure \
 --prefix=/etc/nginx \
 --sbin-path=/usr/sbin/nginx \
