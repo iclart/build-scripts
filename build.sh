@@ -106,7 +106,7 @@ rm -rf v${webdav_ext_ver}.tar.gz
 # export CC=clang-${clang_ver}
 
 # nginx
-wget https://athena.ifreetion.com/Sources/nginx/nginx-${ngx_ver}.tar.gz
+wget https://nginx.org/download/nginx-${ngx_ver}.tar.gz
 tar -zxvf nginx-${ngx_ver}.tar.gz
 rm -rf nginx-${ngx_ver}.tar.gz
 pushd nginx-${ngx_ver}
