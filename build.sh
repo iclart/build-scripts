@@ -99,7 +99,7 @@ cd ..
 --add-module=./deps/ngx_brotli \
 --add-module=./deps/headers-more-nginx-module \
 --add-module=./deps/ngx_http_geoip2_module-${geoip2_ver} \
---with-pcre=../pcre-${pcre_ver} \
+--with-pcre=./deps/pcre-${pcre_ver} \
 --with-pcre-jit \
 --with-zlib=./deps/zlib \
 --with-openssl=./deps/openssl-${openssl_ver} \
