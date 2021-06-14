@@ -3,51 +3,24 @@
 . ./versions.sh
 
 # preparation
-mkdir -p /opt/build
-cd /opt/build
-yum update -y
+yum install epel-release -y
 yum groupinstall "Development Tools" -y
-yum install git patch wget pcre pcre-devel zlib zlib-devel libxml2 libxml2-devel libxslt-devel gd gd-devel libatomic_ops-devel -y
+yum install git patch wget pcre pcre-devel zlib zlib-devel libxml2 libxml2-devel libunwind libunwind-devel libxslt libxslt-devel gd gd-devel libatomic_ops-devel GeoIP GeoIP-devel libmaxminddb libmaxminddb-devel -y
 
-# fetch patch
-cd /opt/build
-mkdir patch
-pushd patch
-wget https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/openssl-equal-${openssl_ver}_ciphers.patch
-wget https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/openssl-${openssl_ver}-chacha_draft.patch
-wget https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/nginx_strict-sni_${nssp_ver}.patch
-popd
+# nginx
+wget https://nginx.org/download/nginx-${ngx_ver}.tar.gz
+tar -zxvf nginx-${ngx_ver}.tar.gz
+rm -rf nginx-${ngx_ver}.tar.gz
+mv nginx-${ngx_ver} build
+chmod 0755 * -R
+cd build
 
-# openssl upgrade -step1: fetch source
+# fetch openssl
+mkdir deps
+cd deps
 wget https://www.openssl.org/source/openssl-${openssl_ver}.tar.gz
 tar -zxvf openssl-${openssl_ver}.tar.gz
-
-# step2: build
-pushd openssl-${openssl_ver}
-./config --prefix=/usr/local/openssl
-make -j$(nproc) && make install
-popd
-
-# step3: replace old version
-mv /usr/bin/openssl /usr/bin/openssl.old
-mv /usr/lib64/openssl /usr/lib64/openssl.old
-mv /usr/lib64/libssl.so /usr/lib64/libssl.so.old
-ln -s /usr/local/openssl/bin/openssl /usr/bin/openssl
-ln -s /usr/local/openssl/include/openssl /usr/include/openssl
-ln -s /usr/local/openssl/lib/libssl.so /usr/lib64/libssl.so
-echo "/usr/local/openssl/lib" >> /etc/ld.so.conf
-ldconfig -v
-
-# step4: clean
-rm -rf openssl-${openssl_ver}
-
-# openssl
-tar -zxvf openssl-${openssl_ver}.tar.gz
 rm -rf openssl-${openssl_ver}.tar.gz
-pushd openssl-${openssl_ver}
-patch -p1 < ../patch/openssl-equal-${openssl_ver}_ciphers.patch
-patch -p1 < ../patch/openssl-${openssl_ver}-chacha_draft.patch
-popd
 
 # ngx_brotli_module
 git clone https://github.com/google/ngx_brotli.git
@@ -55,62 +28,27 @@ pushd ngx_brotli
 git submodule update --init
 popd
 
-# zlib
-git clone https://github.com/cloudflare/zlib.git
-pushd zlib
-./configure
-popd
-
-# ndk
-wget https://github.com/simplresty/ngx_devel_kit/archive/v${ndk_ver}.tar.gz
-tar -zxvf v${ndk_ver}.tar.gz
-rm -rf v${ndk_ver}.tar.gz
-
 # ngx_more_headers
 git clone https://github.com/openresty/headers-more-nginx-module.git
 
-# ngx_lua_module
-wget https://github.com/openresty/lua-nginx-module/archive/v${ngx_lua_ver}.tar.gz
-tar -zxvf v${ngx_lua_ver}.tar.gz
-rm -rf v${ngx_lua_ver}.tar.gz
-
-# luajit2
-wget https://github.com/openresty/luajit2/archive/v${luajit_ver}.tar.gz
-tar -zxvf v${luajit_ver}.tar.gz
-rm -rf v${luajit_ver}.tar.gz
-pushd luajit2-${luajit_ver}
-make -j$(nproc) && make install
-popd
-export LUAJIT_LIB=/usr/local/lib
-export LUAJIT_INC=/usr/local/include/luajit-2.1
+# geoip2_module
+wget https://github.com/leev/ngx_http_geoip2_module/archive/refs/tags/${geoip2_ver}.tar.gz
+tar -zxvf ${geoip2_ver}.tar.gz
+rm -rf ${geoip2_ver}.tar.gz
 
 # pcre
 wget https://ftp.pcre.org/pub/pcre/pcre-${pcre_ver}.tar.gz
 tar -zxvf pcre-${pcre_ver}.tar.gz
 rm -rf pcre-${pcre_ver}.tar.gz
 
-# cache_purge_module
-wget https://github.com/FRiCKLE/ngx_cache_purge/archive/${cache_ver}.tar.gz
-tar -zxvf ${cache_ver}.tar.gz
-rm -rf ${cache_ver}.tar.gz
+# zlib
+git clone https://github.com/cloudflare/zlib.git
+pushd zlib
+./configure
+popd
 
-# webdav-ext-module
-wget https://github.com/arut/nginx-dav-ext-module/archive/v${webdav_ext_ver}.tar.gz
-tar -zxvf v${webdav_ext_ver}.tar.gz
-rm -rf v${webdav_ext_ver}.tar.gz
-
-# Clang
-# export CFLAGS="-Wno-c++11-extensions -Wno-error -Wno-deprecated-declarations -Wno-unused-const-variable -Wno-conditional-uninitialized -Wno-mismatched-tags"
-# export COMPILER=clang-${clang_ver}
-# export CXX=clang++-${clang_ver}
-# export CC=clang-${clang_ver}
-
-# nginx
-wget https://nginx.org/download/nginx-${ngx_ver}.tar.gz
-tar -zxvf nginx-${ngx_ver}.tar.gz
-rm -rf nginx-${ngx_ver}.tar.gz
-pushd nginx-${ngx_ver}
-patch -p1 < ../patch/nginx_strict-sni_${nssp_ver}.patch
+# compile
+cd ..
 ./configure \
 --prefix=/etc/nginx \
 --sbin-path=/usr/sbin/nginx \
@@ -158,15 +96,13 @@ patch -p1 < ../patch/nginx_strict-sni_${nssp_ver}.patch
 --with-stream_ssl_preread_module \
 --with-libatomic \
 --with-ld-opt=-Wl,-rpath,/usr/local/lib \
---add-module=../ngx_brotli \
---add-module=../ngx_devel_kit-${ndk_ver} \
---add-module=../headers-more-nginx-module \
---add-module=../lua-nginx-module-${ngx_lua_ver} \
---add-module=../ngx_cache_purge-${cache_ver} \
---add-module=../nginx-dav-ext-module-${webdav_ext_ver} \
+--add-module=./deps/ngx_brotli \
+--add-module=./deps/headers-more-nginx-module \
+--add-module=./deps/ngx_http_geoip2_module-${geoip2_ver} \
 --with-pcre=../pcre-${pcre_ver} \
---with-zlib=../zlib \
---with-openssl=../openssl-${openssl_ver} \
+--with-pcre-jit \
+--with-zlib=./deps/zlib \
+--with-openssl=./deps/openssl-${openssl_ver} \
 --with-openssl-opt=enable-weak-ssl-ciphers
 
 make -j$(nproc)
